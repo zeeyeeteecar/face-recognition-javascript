@@ -25,7 +25,7 @@ function startWebcam() {
 }
 
 function getLabeledFaceDescriptions() {
-  const labels = ["Trump", "Obama", "Tom"];
+  const labels = ["Trump", "Obama", "Tom", "Ella"];
   return Promise.all(
     labels.map(async (label) => {
       const descriptions = [];
@@ -63,22 +63,25 @@ video.addEventListener("play", async () => {
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-    
+
     faceapi.draw.drawDetections(canvas, resizedDetections);
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
 
     const results = resizedDetections.map((d) => {
+      //console.log(d.descriptor);
       return faceMatcher.findBestMatch(d.descriptor);
     });
+
     results.forEach((result, i) => {
       const box = resizedDetections[i].detection.box;
+      console.log("result", result);
       const drawBox = new faceapi.draw.DrawBox(box, {
         label: result,
       });
       drawBox.draw(canvas);
     });
-  }, 100);
+  }, 1000);
 });
 
 //startWebcam();
