@@ -25,7 +25,7 @@ function startWebcam() {
 }
 
 function getLabeledFaceDescriptions() {
-  const labels = ["Trump", "Obama", "Tom", "Ella"];
+  const labels = ["Trump", "Obama", "Tom", "Ella", "Vincent"];
   return Promise.all(
     labels.map(async (label) => {
       const descriptions = [];
