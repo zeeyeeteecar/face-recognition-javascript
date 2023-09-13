@@ -1,13 +1,11 @@
 const video = document.getElementById("video");
-const labels = ["Trump", "Obama", "Tom"];
-const modelsFolder = "/models";
 
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri(modelsFolder),
-  faceapi.nets.faceLandmark68Net.loadFromUri(modelsFolder),
-  faceapi.nets.faceRecognitionNet.loadFromUri(modelsFolder),
-  faceapi.nets.faceExpressionNet.loadFromUri(modelsFolder),
-  faceapi.nets.ssdMobilenetv1.loadFromUri(modelsFolder),
+  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+  faceapi.nets.faceExpressionNet.loadFromUri("/models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
   //faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
   //faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
 ]).then(startWebcam);
@@ -27,6 +25,7 @@ function startWebcam() {
 }
 
 function getLabeledFaceDescriptions() {
+  const labels = ["Trump", "Obama", "Tom"];
   return Promise.all(
     labels.map(async (label) => {
       const descriptions = [];
@@ -64,7 +63,7 @@ video.addEventListener("play", async () => {
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-
+    
     faceapi.draw.drawDetections(canvas, resizedDetections);
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
