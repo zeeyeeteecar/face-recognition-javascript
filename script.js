@@ -81,7 +81,7 @@ video.addEventListener("play", async () => {
       });
       drawBox.draw(canvas);
     });
-  }, 1000);
+  }, 100);
 });
 
 //startWebcam();
