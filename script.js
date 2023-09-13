@@ -10,6 +10,11 @@ Promise.all([
   //faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
 ]).then(startWebcam);
 
+function get_List_In_Labels_Folder() {
+  const files = fs.readdirSync("/labels");
+  return files;
+}
+
 function startWebcam() {
   navigator.mediaDevices
     .getUserMedia({
@@ -22,6 +27,7 @@ function startWebcam() {
     .catch((error) => {
       console.error(error);
     });
+  console.log("get_List_In_Labels_Folder", get_List_In_Labels_Folder());
 }
 
 function getLabeledFaceDescriptions() {
@@ -81,7 +87,7 @@ video.addEventListener("play", async () => {
       });
       drawBox.draw(canvas);
     });
-  }, 100);
+  }, 500);
 });
 
 //startWebcam();
