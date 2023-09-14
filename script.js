@@ -75,7 +75,7 @@ video.addEventListener("play", async () => {
     faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
 
     const results = resizedDetections.map((d) => {
-      console.log(d.descriptor);
+      console.log("d.descriptor ==",d.descriptor );
       return faceMatcher.findBestMatch(d.descriptor);
     });
 
