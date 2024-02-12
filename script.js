@@ -10,12 +10,13 @@ Promise.all([
   //faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
 ]).then(startWebcam);
 
-function get_List_In_Labels_Folder() {
-  const files = fs.readdirSync("/labels");
+async function get_List_In_Labels_Folder() {
+  const files = await fs.readdirSync("/labels");
+  console.log("files", files);
   return files;
 }
 
-function startWebcam() {
+async function startWebcam() {
   navigator.mediaDevices
     .getUserMedia({
       video: true,
@@ -27,16 +28,45 @@ function startWebcam() {
     .catch((error) => {
       console.error(error);
     });
-  console.log("get_List_In_Labels_Folder", get_List_In_Labels_Folder());
+  console.log("get_List_In_Labels_Folder", await get_List_In_Labels_Folder());
 }
 
 function getLabeledFaceDescriptions() {
-  const labels = ["Trump", "Obama", "Tom", "Ella", "Vincent"];
+  const labels = ["TrumpD", "Obama", "TomT", "EllaH", "VincentK"];
   return Promise.all(
     labels.map(async (label) => {
       const descriptions = [];
       for (let i = 1; i <= 2; i++) {
-        const img = await faceapi.fetchImage(`./labels/${label}/${i}.png`);
+        const photosFolder_1 = `./labels/${label}/${i}.png`;
+        const photosFolder_2 = `http://www.accessrichmond.org/Captures/labels/${label}/${i}.png`;
+        const photosFolder_3 =
+          "https://www.accessrichmond.org/o2b2/CaptureCam/userPhotos/" +
+          label +
+          "/" +
+          i.toString() +
+          ".png";
+
+        let headers = new Headers();
+
+        headers.append("Content-Type", "application/json");
+        headers.append("Accept", "application/json");
+        //headers.append('Authorization', 'Basic ' + base64.encode(username + ":" +  password));
+        headers.append("Origin", "https://www.accessrichmond.org/");
+
+        const base64Response = await fetch(photosFolder_1, {
+          mode: "no-cors",
+        });
+
+        const blob = await base64Response.blob();
+        const img = await faceapi.bufferToImage(blob);
+
+        // const img = await faceapi.fetchImage(photosFolder_2, {
+        //   mode: "no-cors",
+        //   //credentials: "include",
+        //   method: "GET",
+        //   headers: headers,
+        // });
+
         const detections = await faceapi
           .detectSingleFace(img)
           .withFaceLandmarks()
@@ -75,7 +105,7 @@ video.addEventListener("play", async () => {
     faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
 
     const results = resizedDetections.map((d) => {
-      console.log("d.descriptor ==",d.descriptor );
+      console.log("d.descriptor ==", d.descriptor);
       return faceMatcher.findBestMatch(d.descriptor);
     });
 
@@ -87,7 +117,7 @@ video.addEventListener("play", async () => {
       });
       drawBox.draw(canvas);
     });
-  }, 500);
+  }, 1000);
 });
 
 //startWebcam();
